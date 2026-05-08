@@ -172,7 +172,13 @@ const OnboardingGate: React.FC<OnboardingGateProps> = ({ onAnalysisComplete, onC
                     <p className="text-lg font-bold text-white mb-1">Drop your resume here</p>
                     <p className="text-xs text-slate-500">PDF, DOCX, or TXT (Max 10MB)</p>
                   </div>
-                  <button className="px-6 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-all flex items-center gap-2">
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      fileInputRef.current?.click();
+                    }}
+                    className="px-6 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-all flex items-center gap-2"
+                  >
                     Browse Files <ArrowRight size={16} />
                   </button>
                 </div>

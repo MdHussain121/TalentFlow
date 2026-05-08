@@ -35,18 +35,19 @@ const App: React.FC = () => {
   const [isStarted, setIsStarted] = useState(() => {
     return window.location.pathname === '/dashboard';
   });
-  const [hasResume, setHasResume] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    const resumeExists = localStorage.getItem('resumeUploaded') === 'true';
+    return !resumeExists;
+  });
+
   const [activeTab, setActiveTab] = useState('overview');
 
   // Check resume status when component mounts or when navigating to dashboard
   useEffect(() => {
     if (isStarted) {
       const resumeExists = localStorage.getItem('resumeUploaded') === 'true';
-      if (!resumeExists) {
-        setIsAnalyzing(true);
-      }
-      setHasResume(resumeExists);
+      setShowOnboarding(!resumeExists);
     }
   }, [isStarted]);
 
@@ -86,13 +87,6 @@ const App: React.FC = () => {
   };
 
   const onNavigateToLanding = () => {
-    // Optionally clear resume data when going back to landing
-    // Uncomment to enable reset on logout:
-    // localStorage.removeItem('resumeUploaded');
-    // localStorage.removeItem('resumeData');
-    // localStorage.removeItem('jobSearchCached');
-    // setHasResume(false);
-
     window.history.pushState({}, '', '/');
     setIsStarted(false);
   };
@@ -120,11 +114,8 @@ const App: React.FC = () => {
     setSkills(newSkills);
     setReadinessScore(prev => Math.min(prev + 5, 100));
 
-    // Update hasResume state
-    setHasResume(true);
-    setIsAnalyzing(false);
-
-    // Switch to jobs tab to show results
+    // Hide onboarding and switch to jobs tab
+    setShowOnboarding(false);
     setActiveTab('realtime');
     showFeedback("AI Analysis Complete! Your Skill Heatmap has been updated.", "success");
   };
@@ -170,7 +161,7 @@ const App: React.FC = () => {
   }
 
   // Show OnboardingGate if user is in dashboard but has no resume
-  if (isAnalyzing || !hasResume) {
+  if (showOnboarding) {
     return <OnboardingGate onAnalysisComplete={handleOnboardingComplete} />;
   }
 
@@ -272,6 +263,24 @@ const App: React.FC = () => {
                 </div>
               </div>
 
+            </motion.div>
+          )}
+
+          {activeTab === 'skills' && (
+            <motion.div
+              key="skills"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="bento-item p-10 min-h-[600px] flex flex-col"
+            >
+              <div className="mb-8">
+                <h3 className="text-3xl font-bold mb-2">Detailed Skill Analysis</h3>
+                <p className="text-slate-400 text-sm">Visualizing your technical DNA and market alignment based on AI resume parsing.</p>
+              </div>
+              <div className="flex-grow">
+                <SkillHeatmap skills={skills} />
+              </div>
             </motion.div>
           )}
 
