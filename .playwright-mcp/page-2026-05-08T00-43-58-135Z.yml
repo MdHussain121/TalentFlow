@@ -1,0 +1,74 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e7]
+      - heading "TalentFlow AI" [level=1] [ref=e9]
+    - generic [ref=e10]:
+      - link "Features" [ref=e11] [cursor=pointer]:
+        - /url: "#features"
+      - link "Vision" [ref=e12] [cursor=pointer]:
+        - /url: "#vision"
+      - link "Network" [ref=e13] [cursor=pointer]:
+        - /url: "#network"
+  - banner [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]: The Future of Technical Hiring is Here
+        - heading "Accelerate Your Career with Neural AI" [level=2] [ref=e18]:
+          - text: Accelerate Your
+          - text: Career with Neural AI
+        - paragraph [ref=e19]: TalentFlow AI bridges the gap between ambitious students and global opportunities using real-time skill DNA analysis and Gemini-powered mock simulations.
+        - button "Get Started" [ref=e20]:
+          - text: Get Started
+          - img [ref=e21]
+      - img [ref=e29]
+  - generic [ref=e42]:
+    - generic [ref=e43]:
+      - heading "Hyper-Personalized Growth" [level=3] [ref=e44]
+      - paragraph [ref=e45]: Everything you need to crack your dream role, powered by state-of-the-art LLMs.
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - img [ref=e49]
+        - heading "Neural Skill Mapping" [level=4] [ref=e52]
+        - paragraph [ref=e53]: Upload your resume and get a live heatmap of your strengths and latent technical potential.
+      - generic [ref=e54]:
+        - img [ref=e56]
+        - heading "AI Mock Drills" [level=4] [ref=e60]
+        - paragraph [ref=e61]: Experience real-time technical interviews with Gemini 2.5 and get instant sentiment feedback.
+      - generic [ref=e62]:
+        - img [ref=e64]
+        - heading "Global Job Search" [level=4] [ref=e67]
+        - paragraph [ref=e68]: Neural search connects you to direct internship roles worldwide based on your unique DNA.
+  - generic [ref=e70]:
+    - heading "Our Vision" [level=3] [ref=e71]
+    - paragraph [ref=e72]: We believe every student, regardless of their background, deserves AI-powered tools to compete for the world's best internships. Our mission is to level the playing field with technology that was once reserved for elite institutions.
+    - generic [ref=e73]:
+      - generic [ref=e74]:
+        - heading "Merit-Based" [level=4] [ref=e75]
+        - paragraph [ref=e76]: Skills matter more than schools
+      - generic [ref=e77]:
+        - heading "Borderless" [level=4] [ref=e78]
+        - paragraph [ref=e79]: Connect globally without barriers
+      - generic [ref=e80]:
+        - heading "Continuous" [level=4] [ref=e81]
+        - paragraph [ref=e82]: Real-time feedback for growth
+  - generic [ref=e84]:
+    - heading "Powering Your Network" [level=3] [ref=e85]
+    - paragraph [ref=e86]: From resume analysis to interview simulations, our AI engine processes millions of data points to connect you with opportunities that match your unique skill DNA.
+    - generic [ref=e87]:
+      - img [ref=e88]
+      - heading "Ready to Get Started?" [level=4] [ref=e91]
+      - paragraph [ref=e92]: Upload your resume and let AI find your perfect match.
+      - button "Enter Dashboard" [ref=e93]
+  - contentinfo [ref=e94]:
+    - generic [ref=e95]:
+      - generic [ref=e96]:
+        - img [ref=e97]
+        - generic [ref=e99]: TalentFlow AI
+      - generic [ref=e100]:
+        - link "Privacy" [ref=e101] [cursor=pointer]:
+          - /url: "#"
+        - link "Terms" [ref=e102] [cursor=pointer]:
+          - /url: "#"
+        - link "API Docs" [ref=e103] [cursor=pointer]:
+          - /url: "#"
