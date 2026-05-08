@@ -63,6 +63,9 @@ class LLMService:
         if not self.api_key:
             return "Error: NVIDIA_API_KEY is missing. Please configure it in your .env file."
             
+        if not messages:
+            return "Error: No messages provided for chat."
+
         try:
             payload = {
                 "model": self.model,
@@ -80,11 +83,16 @@ class LLMService:
 
             async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.post(self.base_url, json=payload, headers=headers)
-                response.raise_for_status()
+                
+                if response.status_code != 200:
+                    error_text = response.text
+                    print(f"NVIDIA Chat API Error ({response.status_code}): {error_text}")
+                    return f"Error: AI chat service is currently unavailable. ({response.status_code})"
+                
                 data = response.json()
                 return data["choices"][0]["message"]["content"]
         except Exception as e:
-            print(f"NVIDIA Chat API Error: {e}")
+            print(f"NVIDIA Chat Connection Error: {e}")
             raise e
 
 llm_service = LLMService()

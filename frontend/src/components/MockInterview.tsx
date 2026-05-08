@@ -100,24 +100,56 @@ const MockInterview: React.FC<MockInterviewProps> = ({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-slate-400">
-        <Loader2 className="animate-spin text-primary mb-4" size={48} />
-        <p className="text-sm font-medium">Generating {jobTitle} Interview Questions...</p>
+      <div className="flex flex-col items-center justify-center h-[500px] text-slate-400">
+        <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 animate-pulse border border-primary/20">
+          <MessageSquare className="text-primary" size={32} />
+        </div>
+        <h3 className="text-xl font-bold text-white mb-2">Preparing Specialized Interview</h3>
+        <p className="text-sm text-slate-500 mb-8 max-w-xs text-center">
+          Analyzing requirements for <span className="text-primary font-bold">{jobTitle}</span> at <span className="text-slate-300">{company}</span>...
+        </p>
+        <Loader2 className="animate-spin text-primary mb-4" size={32} />
+        <p className="text-[10px] uppercase tracking-widest font-black opacity-50">Fetching Specialized Questions from NVIDIA Neural Engine</p>
       </div>
     );
   }
 
   if (error || questions.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-center">
-        <AlertCircle className="text-primary mb-4" size={48} />
-        <h3 className="text-lg font-bold mb-2">Generation Failed</h3>
-        <p className="text-sm text-slate-400 mb-6 max-w-xs">{error || "We couldn't generate questions for this role."}</p>
+      <div className="flex flex-col items-center justify-center min-h-[500px] text-center p-6">
+        <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mb-6 border border-red-500/20">
+          <AlertCircle className="text-red-500" size={32} />
+        </div>
+        <h3 className="text-2xl font-bold text-white mb-2">Neural Link Interrupted</h3>
+        <p className="text-sm text-slate-400 mb-8 max-w-md mx-auto">
+          We couldn't generate specialized questions for the <span className="text-primary font-bold">{jobTitle}</span> position at this moment.
+        </p>
+
+        <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-8 max-w-md w-full text-left">
+          <h4 className="text-xs font-bold text-primary uppercase tracking-widest mb-4 flex items-center gap-2">
+            <HelpCircle size={14} /> How to generate questions:
+          </h4>
+          <ul className="space-y-3 text-[11px] text-slate-400">
+            <li className="flex gap-2">
+              <span className="text-primary font-bold">1.</span>
+              <span>Ensure your <span className="text-white font-medium">NVIDIA_API_KEY</span> is correctly configured in the backend <span className="text-white font-mono">.env</span> file.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-primary font-bold">2.</span>
+              <span>Check if the <span className="text-white font-medium">ai-engine</span> server is running on <span className="text-white font-mono">http://localhost:8000</span>.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-primary font-bold">3.</span>
+              <span>Wait 60 seconds if you've hit rate limits, then click the retry button below.</span>
+            </li>
+          </ul>
+        </div>
+
         <button 
           onClick={() => window.location.reload()}
-          className="px-6 py-2 rounded-xl bg-primary text-white text-xs font-bold"
+          className="px-10 py-3 rounded-xl bg-primary text-white text-xs font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
         >
-          Try Again
+          RETRY GENERATION
         </button>
       </div>
     );
