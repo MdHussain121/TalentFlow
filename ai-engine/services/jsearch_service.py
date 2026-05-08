@@ -12,9 +12,21 @@ class JSearchService:
         self.api_key = os.getenv("JSEARCH_API_KEY", "your_rapidapi_key_here")
         self.host = "jsearch.p.rapidapi.com"
         self.base_url = "https://jsearch.p.rapidapi.com/search"
+        self.cache = {}
+        self.client = httpx.AsyncClient(timeout=15.0)
 
     async def search_internships(self, query: str, location: str = "India"):
-        """Fetches real-time internship data from JSearch API."""
+        """Fetches real-time internship data from JSearch API with caching."""
+        import time
+        start_time = time.time()
+        
+        cache_key = f"{query}_{location}"
+        if cache_key in self.cache:
+            entry = self.cache[cache_key]
+            if time.time() - entry['timestamp'] < 300: # 5 min cache
+                print(f"JSearch: Returning cached results for '{query}'")
+                return entry['data']
+
         headers = {
             "X-RapidAPI-Key": self.api_key,
             "X-RapidAPI-Host": self.host
@@ -26,14 +38,22 @@ class JSearchService:
         }
         
         try:
-            async with httpx.AsyncClient() as client:
-                response = await client.get(self.base_url, headers=headers, params=params, timeout=10.0)
-                if response.status_code == 200:
-                    data = response.json()
-                    return self._format_results(data.get("data", []))
-                else:
-                    print(f"JSearch API Error: {response.status_code}")
-                    return []
+            print(f"JSearch: Fetching live results for '{query}'...")
+            response = await self.client.get(self.base_url, headers=headers, params=params)
+            duration = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                results = self._format_results(data.get("data", []))
+                self.cache[cache_key] = {
+                    'timestamp': time.time(),
+                    'data': results
+                }
+                print(f"JSearch: API call took {duration:.2f}s")
+                return results
+            else:
+                print(f"JSearch API Error ({response.status_code}): {response.text}")
+                return []
         except Exception as e:
             print(f"JSearch Connection Error: {e}")
             return []
@@ -47,7 +67,7 @@ class JSearchService:
                 "company": job.get("employer_name"),
                 "location": job.get("job_city", "Remote"),
                 "link": job.get("job_apply_link"),
-                "match": "90%+" # Mock match for now, could be calculated
+                "match": "90%+" 
             })
         return formatted
 
