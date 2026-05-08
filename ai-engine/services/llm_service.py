@@ -16,7 +16,7 @@ class LLMService:
     def __init__(self):
         self.api_key = os.getenv("NVIDIA_API_KEY")
         self.base_url = "https://integrate.api.nvidia.com/v1/chat/completions"
-        self.model = "z-ai/glm4.7"
+        self.model = "meta/llama-3.1-8b-instruct"
         
         if not self.api_key:
             print("Warning: NVIDIA_API_KEY not found in environment.")
@@ -47,11 +47,16 @@ class LLMService:
 
             async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.post(self.base_url, json=payload, headers=headers)
-                response.raise_for_status()
+                
+                if response.status_code != 200:
+                    error_text = response.text
+                    print(f"NVIDIA API Error ({response.status_code}): {error_text}")
+                    return f"Error: NVIDIA AI is currently unavailable. ({response.status_code})"
+                
                 data = response.json()
                 return data["choices"][0]["message"]["content"]
         except Exception as e:
-            print(f"NVIDIA API Error: {e}")
+            print(f"NVIDIA Connection Error: {e}")
             raise e
 
     async def generate_chat(self, messages: List[Dict[str, str]], temperature: float = 0.7, max_tokens: int = 1024) -> str:
