@@ -4,7 +4,13 @@ import asyncio
 from typing import List, Dict
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load from ai-engine/.env or root .env
+if os.path.exists(".env"):
+    load_dotenv(".env")
+elif os.path.exists("../.env"):
+    load_dotenv("../.env")
+else:
+    load_dotenv() # Fallback to standard behavior
 
 class LLMService:
     def __init__(self):
