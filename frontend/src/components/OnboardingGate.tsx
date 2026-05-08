@@ -36,7 +36,7 @@ const OnboardingGate: React.FC<OnboardingGateProps> = ({ onAnalysisComplete, onC
         } else {
           clearInterval(interval);
         }
-      }, 600);
+      }, 1200);
 
       return () => clearInterval(interval);
     }
