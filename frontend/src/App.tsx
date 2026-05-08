@@ -114,9 +114,9 @@ const App: React.FC = () => {
     setSkills(newSkills);
     setReadinessScore(prev => Math.min(prev + 5, 100));
 
-    // Hide onboarding and switch to jobs tab
+    // Hide onboarding and switch to overview tab
     setShowOnboarding(false);
-    setActiveTab('realtime');
+    setActiveTab('overview');
     showFeedback("AI Analysis Complete! Your Skill Heatmap has been updated.", "success");
   };
 
