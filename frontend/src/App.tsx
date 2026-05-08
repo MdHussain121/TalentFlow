@@ -223,33 +223,91 @@ const App: React.FC = () => {
               exit={{ opacity: 0, x: 20 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 auto-rows-auto"
             >
-              {/* North Star Orbit Hero */}
-              <div className="col-span-1 md:col-span-2 lg:col-span-8 bento-item p-10 flex flex-col md:flex-row items-center gap-12 relative overflow-hidden">
-                <div className="relative z-10 shrink-0">
-                  <NorthStarOrbit progress={readinessScore} label="Market Readiness" />
-                </div>
-                <div className="relative z-10 flex flex-col justify-center text-center md:text-left">
-                  <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest mb-4 inline-block border border-primary/20 self-center md:self-start">
-                    Day-in-the-Life Simulator Active
-                  </span>
-                  <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-                    Your Career Orbit is Expanding
-                  </h2>
-                  <p className="text-slate-400 max-w-md mb-8">
-                    Based on your recent GitHub commits and mock interview sentiment, your readiness score has increased by <span className="text-emerald-500 font-bold">+12%</span> this week.
-                  </p>
-                </div>
-              </div>
+              {/* New Premium Overview Hero */}
+              <div className="col-span-1 md:col-span-2 lg:col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                {/* Main Readiness Card */}
+                <div className="lg:col-span-8 bento-item p-12 flex flex-col md:flex-row items-center gap-16 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+                    <Zap size={200} className="text-primary -rotate-12" />
+                  </div>
+                  
+                  <div className="relative z-10 shrink-0 transform hover:scale-105 transition-transform duration-500">
+                    <NorthStarOrbit progress={readinessScore} label="Market Readiness" />
+                  </div>
+                  
+                  <div className="relative z-10 flex flex-col justify-center text-center md:text-left">
+                    <div className="flex items-center gap-3 mb-6 self-center md:self-start">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                        Day-in-the-Life Simulator Active
+                      </span>
+                    </div>
+                    
+                    <h2 className="text-5xl font-black mb-6 leading-[1.1] tracking-tight text-white italic">
+                      YOUR CAREER ORBIT <br/>
+                      <span className="text-primary not-italic">IS EXPANDING</span>
+                    </h2>
+                    
+                    <p className="text-slate-400 text-sm leading-relaxed max-w-md mb-8">
+                      Based on your recent <span className="text-white font-medium">GitHub commits</span> and <span className="text-white font-medium">mock interview sentiment</span>, your readiness score has increased by <span className="text-emerald-500 font-bold">+12%</span> this week.
+                    </p>
 
-              {/* Skill Heatmap Card */}
-              <div className="col-span-1 md:col-span-1 lg:col-span-4 bento-item flex flex-col min-h-[400px]">
-                <div className="p-6 border-b border-white/5">
-                  <h3 className="font-bold flex items-center gap-2 text-sm">
-                    <Cpu size={18} className="text-primary" /> Live Skill Heatmap
-                  </h3>
+                    <div className="flex flex-wrap gap-4">
+                      <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
+                        <CheckCircle size={14} className="text-primary" />
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300">Technical Alignment: High</span>
+                      </div>
+                      <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
+                        <CheckCircle size={14} className="text-emerald-500" />
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300">Interview Depth: 8.4/10</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-grow">
-                  <SkillHeatmap skills={skills} />
+
+                {/* Secondary Quick Stats */}
+                <div className="lg:col-span-4 flex flex-col gap-8">
+                  <div className="bento-item p-8 flex-grow flex flex-col justify-between group">
+                    <div>
+                      <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-6 flex items-center gap-2">
+                        <Cpu size={14} className="text-primary" /> Skill DNA Match
+                      </h3>
+                      <div className="space-y-4">
+                        {skills.slice(0, 3).map((s, i) => (
+                          <div key={i} className="space-y-2">
+                            <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest">
+                              <span className="text-slate-300">{s.name}</span>
+                              <span className="text-primary">{s.level}%</span>
+                            </div>
+                            <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                              <motion.div 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${s.level}%` }}
+                                className="h-full bg-primary"
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => setActiveTab('skills')}
+                      className="mt-8 text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:text-white transition-colors flex items-center gap-2 group-hover:gap-3 transition-all"
+                    >
+                      View Full Analysis <ChevronRight size={12} />
+                    </button>
+                  </div>
+
+                  <div className="bento-item p-8 bg-primary/5 border-primary/20 flex items-center justify-between group cursor-pointer" onClick={() => setActiveTab('realtime')}>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-1">New Roles Found</p>
+                      <h4 className="text-2xl font-black text-white italic">12 MATCHES</h4>
+                    </div>
+                    <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+                      <Globe size={24} />
+                    </div>
+                  </div>
                 </div>
               </div>
 
