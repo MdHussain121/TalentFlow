@@ -1,74 +1,81 @@
 # TalentFlow AI ⚡️
 
-> **The Editorial Brutalist Career OS.** TalentFlow is a high-craft, AI-native platform designed to bridge the gap between student potential and industry reality.
-
-![TalentFlow Banner](https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=2000)
+> **The Editorial Brutalist Career OS.** TalentFlow is a high-craft, AI-native platform designed to bridge the gap between student potential and industry reality. It synthesizes technical DNA from raw resumes and transforms it into an actionable preparation ecosystem.
 
 ## 🌌 Overview
 
-TalentFlow AI is not just a job board; it's a **Personalized Growth Engine**. By synthesizing your technical DNA from resumes and performance metrics, it creates a high-fidelity path toward high-impact roles at top-tier companies.
+TalentFlow AI is a career-acceleration platform that treats preparation like an engineering project. By utilizing the NVIDIA NIM (Llama 3) engine and the JSearch API, it provides a high-fidelity environment where candidates don't just "apply" for jobs—they simulate their way into them.
 
-## 🛠 Features
+## 🛠 Features in Detail
 
 ### 1. Personalized Growth Engine
-The centerpiece of the dashboard. It visualizes your **Market Readiness** and **Technical Synergy** using the **NorthStar Orbit** system, giving you a singular metric for your career trajectory.
+The core intelligence layer of the TalentFlow dashboard. It uses a custom **NorthStar Orbit** visualization to track two critical metrics:
+- **Market Readiness**: A composite score calculating your alignment with current industry standards.
+- **Technical Synergy**: An index measuring how well your specific tech stack works together (e.g., the synergy between React and Next.js).
+The interface follows an **Editorial Brutalist** design, utilizing bold typography and asymmetric bento-grids to present data with high clarity and authority.
 
-### 2. Skill DNA Heatmap
-A premium visualization of your technical competencies.
-- **Aura Intensity**: Expert-level skills emit a rhythmic pulse, signaling market mastery.
-- **Tiered Analysis**: Automatically categorizes skills into Expert, Advanced, and Intermediate levels.
+### 2. Skill DNA Heatmap (with Aura Intensity)
+A sophisticated visualization of your technical profile, extracted via AI resume parsing.
+- **Dynamic Aura Glow**: Expert-level skills (85%+) feature a rhythmic, breathing pulse effect, making your "power skills" instantly visible to you.
+- **Tiered Competency**: Automatically categorizes your stack into *Expert*, *Advanced*, and *Intermediate* tiers.
+- **Visual Mapping**: Uses a high-contrast color palette to differentiate between Frontend, Backend, and AI specialized tools.
 
 ### 3. Neural Gap Analysis
-Using a custom SVG Radar Chart, TalentFlow maps your skills against "Ideal Candidate" profiles to identify exactly where you need to level up.
+A geometric approach to career planning. Using a custom **SVG Radar Chart**, TalentFlow maps your profile against the "Ideal Candidate" profile for any target role.
+- **Visual Overlays**: Instantly see the "gap" between your current skills and role requirements.
+- **Real-time Sync**: Updates dynamically as you acquire new certifications or complete mock interviews.
 
 ### 4. AI-Generated Crack Roadmaps
-Don't just search—prepare.
-- **Weekly Sprints**: Personalized 4-week plans optimized for specific roles.
-- **Task-Level Detail**: Week-by-week technical goals and system architecture focus.
-- **Real-time Synthesis**: Generated on-the-fly for any role found in the global database.
+When you select a role from the job search, TalentFlow synthesizes a custom **4-Week Preparation Sprint**.
+- **Week-by-Week Focus**: Each week targets a specific domain (e.g., Week 1: Tech Stack Mastery, Week 2: System Architecture).
+- **Synthesized Tasks**: AI generates specific, actionable tasks based on the job description (e.g., "Implement semantic search with Pinecone").
+- **Gated Flow**: The roadmap tab remains locked until a target role is selected, ensuring every preparation step is purpose-driven.
 
-### 5. Peer Circles
-Join live, AI-moderated study groups.
-- **Topic-Specific Rooms**: From "Frontend Alchemists" to "DS/Algo Grind."
-- **AI Peers**: Engage with AI-powered candidate simulations trained on specific technical topics.
+### 5. Peer Circles (AI-Moderated Rooms)
+A collaborative learning space that integrates AI candidate simulations.
+- **Technical Study Groups**: Join rooms like "Frontend Alchemists" or "DS/Algo Grind."
+- **AI Peer Integration**: Chat with AI bots that simulate high-tier candidates, helping you refine your technical explanations and logic.
+- **Intensity Levels**: Choose between *Casual*, *Medium*, and *High* intensity study sessions based on your upcoming interview schedule.
 
-### 6. Neural Job Search
-Integrated with the JSearch API to provide real-time internship recommendations from across the globe, matched directly to your Skill DNA.
+### 6. Neural Job Search (JSearch Integration)
+Deeply integrated search functionality that bypasses generic job filters.
+- **Skill DNA Matching**: Jobs are recommended based on their proximity to your Skill Heatmap.
+- **Instant Roadmap Generation**: Every job card allows for a single-click transition into a 4-week preparation plan.
 
 ## 🏗 Tech Stack
 
-- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, Framer Motion.
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, Framer Motion (for high-end micro-animations).
 - **AI Engine**: FastAPI (Python), NVIDIA NIM (Llama 3 / Mistral), JSearch API.
-- **Design Philosophy**: Editorial Brutalism (High-contrast, bold typography, glassmorphism).
+- **Styling**: Vanilla CSS + Tailwind V4 patterns for a custom design system.
 
-## 🚀 Getting Started
+## 🚀 Installation & Setup
 
 ### Prerequisites
-- Node.js & npm
+- Node.js (V20+)
 - Python 3.10+
 - NVIDIA API Key
 
-### Installation
+### Deployment
 
 1. **Clone the repository**
    ```bash
    git clone https://github.com/MdHussain121/TalentFlow.git
    ```
 
-2. **Frontend Setup**
+2. **Frontend Initialization**
    ```bash
    cd frontend
    npm install
    npm run dev
    ```
 
-3. **AI Engine Setup**
+3. **Backend AI Engine**
    ```bash
    cd ai-engine
    pip install -r requirements.txt
-   # Add your NVIDIA_API_KEY to .env
+   # Set NVIDIA_API_KEY in .env
    uvicorn main:app --reload
    ```
 
 ## ⚖️ License
-MIT License. Created with ❤️ for the next generation of builders.
+MIT License. Created for builders who treat their career like a product.
