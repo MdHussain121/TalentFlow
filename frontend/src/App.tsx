@@ -31,13 +31,16 @@ import AIChatbot from './components/AIChatbot';
 import LandingPage from './components/LandingPage';
 import MockInterview from './components/MockInterview';
 import OnboardingGate from './components/OnboardingGate';
+import NeuralGapAnalysis from './components/NeuralGapAnalysis';
 
 const App: React.FC = () => {
   const [isStarted, setIsStarted] = useState(() => {
     return window.location.pathname === '/dashboard';
   });
 
-  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    return !sessionStorage.getItem('talentflow_resume_analyzed');
+  });
 
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -77,6 +80,7 @@ const App: React.FC = () => {
     { name: "Vector Databases", level: 72, color: "#6366f1" }
   ]);
   const [readinessScore, setReadinessScore] = useState(87);
+  const [isRoadmapLoading, setIsRoadmapLoading] = useState(false);
 
   const onLandingStart = () => {
     window.history.pushState({}, '', '/dashboard');
@@ -113,13 +117,14 @@ const App: React.FC = () => {
 
     // Hide onboarding and switch to overview tab
     setShowOnboarding(false);
+    sessionStorage.setItem('talentflow_resume_analyzed', 'true');
     setActiveTab('overview');
     showFeedback("AI Analysis Complete! Your Skill Heatmap has been updated.", "success");
   };
 
   const handleOnboardingComplete = (data: any) => {
     // Load cached job search results
-    const cachedData = localStorage.getItem('jobSearchCached');
+    const cachedData = sessionStorage.getItem('jobSearchCached');
     if (cachedData) {
       try {
         const parsed = JSON.parse(cachedData);
@@ -133,7 +138,10 @@ const App: React.FC = () => {
   };
 
   const generateRoadmapForJob = async (job: any) => {
-    showFeedback(`Generating Custom Roadmap for ${job.title}...`);
+    setActiveTab('roadmap');
+    setIsRoadmapLoading(true);
+    setRoadmap(null); // Clear previous roadmap
+    
     try {
       const response = await fetch('http://localhost:8000/roadmap/generate', {
         method: 'POST',
@@ -146,10 +154,12 @@ const App: React.FC = () => {
       });
       const data = await response.json();
       setRoadmap(data);
-      setActiveTab('roadmap');
       showFeedback("Your personalized roadmap is ready!", "success");
     } catch (error) {
       console.error("Roadmap generation failed", error);
+      showFeedback("Failed to generate roadmap. Please try again.", "info");
+    } finally {
+      setIsRoadmapLoading(false);
     }
   };
 
@@ -200,7 +210,7 @@ const App: React.FC = () => {
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${activeTab === item.id ? 'bg-primary/10 text-primary border border-primary/20 shadow-[0_0_20px_rgba(99,102,241,0.1)]' : 'text-slate-400 hover:bg-white/5'}`}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${activeTab === item.id ? 'bg-primary/10 text-primary border border-primary/20' : 'text-slate-400 hover:bg-white/5'}`}
             >
               {item.icon}
               <span className="font-medium text-sm">{item.label}</span>
@@ -241,27 +251,33 @@ const App: React.FC = () => {
                     <div className="flex items-center gap-3 mb-6 self-center md:self-start">
                       <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                       <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                        Day-in-the-Life Simulator Active
+                        Platform Analytics Synchronized
                       </span>
                     </div>
                     
                     <h2 className="text-5xl font-black mb-6 leading-[1.1] tracking-tight text-white italic">
-                      YOUR CAREER ORBIT <br/>
-                      <span className="text-primary not-italic">IS EXPANDING</span>
+                      PERSONALIZED <br/>
+                      <span className="text-primary not-italic drop-shadow-[0_0_15px_rgba(99,102,241,0.6)]">GROWTH ENGINE</span>
                     </h2>
                     
                     <p className="text-slate-400 text-sm leading-relaxed max-w-md mb-8">
-                      Based on your recent <span className="text-white font-medium">GitHub commits</span> and <span className="text-white font-medium">mock interview sentiment</span>, your readiness score has increased by <span className="text-emerald-500 font-bold">+12%</span> this week.
+                      Synthesizing your technical DNA and simulated performance metrics to optimize your path towards high-impact roles.
                     </p>
 
-                    <div className="flex flex-wrap gap-4">
-                      <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
-                        <CheckCircle size={14} className="text-primary" />
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300">Technical Alignment: High</span>
+                    <div className="mt-auto flex items-center gap-8">
+                      <div>
+                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Market Readiness</p>
+                        <div className="flex items-end gap-2">
+                          <span className="text-4xl font-black text-white italic leading-none">{readinessScore}%</span>
+                        </div>
                       </div>
-                      <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2">
-                        <CheckCircle size={14} className="text-emerald-500" />
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300">Interview Depth: 8.4/10</span>
+                      <div className="w-px h-10 bg-white/10" />
+                      <div>
+                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Technical Synergy</p>
+                        <div className="flex items-end gap-2">
+                          <span className="text-4xl font-black text-white italic leading-none">{Math.round(readinessScore * 0.95)}%</span>
+                          <span className="text-primary text-xs font-bold mb-1 italic">Optimal</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -309,6 +325,67 @@ const App: React.FC = () => {
                       <Globe size={24} />
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* New Row: Neural Gap Analysis & Market Pulse */}
+              <div className="col-span-1 md:col-span-2 lg:col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-8 mt-4">
+                <div className="lg:col-span-5 bento-item p-8 flex flex-col group">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
+                      <Zap size={14} className="text-primary" /> Neural Gap Analysis
+                    </h3>
+                    <span className="text-[9px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded">Real-time Sync</span>
+                  </div>
+                  <div className="flex-grow flex items-center justify-center min-h-[300px]">
+                    <NeuralGapAnalysis skills={skills} />
+                  </div>
+                </div>
+
+                <div className="lg:col-span-7 bento-item p-8 flex flex-col group overflow-hidden relative">
+                   <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
+                    <Globe size={180} className="text-white" />
+                  </div>
+
+                  <div className="flex justify-between items-center mb-10">
+                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
+                      <Globe size={14} className="text-primary" /> Market Momentum
+                    </h3>
+                  </div>
+
+                  <div className="space-y-8 relative z-10">
+                    <div className="flex items-center gap-6">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                        <BarChart3 size={20} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-white mb-1">Global Skill Scarcity</p>
+                        <p className="text-[10px] text-slate-500">Your expertise in <span className="text-primary">{skills[0]?.name || "Core Technologies"}</span> is in the top 2% of demand.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-6">
+                      <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 border border-emerald-500/20">
+                        <Users size={20} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-white mb-1">Peer Benchmarking</p>
+                        <p className="text-[10px] text-slate-500">You are outperforming {readinessScore}% of applicants in technical simulations.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-6">
+                      <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-500 border border-purple-500/20">
+                        <Cpu size={20} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-white mb-1">Market Hiring Velocity</p>
+                        <p className="text-[10px] text-slate-500">Hiring for <span className="text-primary">{skills[1]?.name || "your tech stack"}</span> has accelerated by 18% this month.</p>
+                      </div>
+                    </div>
+                  </div>
+
+
                 </div>
               </div>
 
@@ -442,7 +519,36 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {isRoadmapLoading ? (
+                <div className="bento-item p-20 flex flex-col items-center justify-center text-center">
+                  <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mb-8 animate-pulse border border-primary/20">
+                    <Map className="text-primary" size={40} />
+                  </div>
+                  <h4 className="text-2xl font-black text-white italic mb-2 tracking-tighter">SYNTHESIZING NEURAL ROADMAP...</h4>
+                  <p className="text-sm text-slate-400 max-w-sm mx-auto mb-8">TalentFlow AI is calculating technical gaps and optimizing your 4-week preparation sprint.</p>
+                  <div className="flex items-center gap-3 px-6 py-3 rounded-2xl glass border border-white/5">
+                    <Loader2 className="text-primary animate-spin" size={18} />
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Optimizing week-by-week tasks</span>
+                  </div>
+                </div>
+              ) : !roadmap ? (
+                <div className="bento-item p-20 flex flex-col items-center justify-center text-center border-dashed border-2 border-white/5 bg-white/[0.02]">
+                  <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mb-8 border border-white/10 group-hover:scale-110 transition-transform">
+                    <Briefcase className="text-slate-500" size={40} />
+                  </div>
+                  <h4 className="text-2xl font-black text-white italic mb-2 tracking-tighter">SELECT A TARGET ROLE</h4>
+                  <p className="text-sm text-slate-400 max-w-sm mx-auto mb-8">
+                    To generate specialized technical roadmaps and preparation tasks, please select a specific role from the <span className="text-primary font-bold cursor-pointer hover:underline" onClick={() => setActiveTab('realtime')}>Real-Time Jobs</span> section first.
+                  </p>
+                  <button 
+                    onClick={() => setActiveTab('realtime')}
+                    className="px-8 py-3 rounded-2xl bg-primary/10 border border-primary/20 text-primary text-xs font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all"
+                  >
+                    Go to Real-Time Jobs
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {(roadmap?.weeks || [
                   { week: 1, focus: "Tech Stack Mastery", tasks: [
                     { title: "React 19 Hooks", description: "Mastering the latest concurrent features and useActionState." },
@@ -466,7 +572,7 @@ const App: React.FC = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.1 }}
-                    className="bento-item p-10 min-h-[320px] relative overflow-hidden group border-t-2 border-t-primary/20 hover:border-t-primary transition-all"
+                    className="bento-item p-12 min-h-[420px] relative overflow-hidden group border-t-2 border-t-primary/20 hover:border-t-primary transition-all"
                   >
                     <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                       <span className="text-6xl font-black italic">0{w.week}</span>
@@ -497,16 +603,9 @@ const App: React.FC = () => {
                   </motion.div>
                 ))}
               </div>
+            )}
 
-              {!roadmap && (
-                <div className="p-6 rounded-2xl bg-primary/5 border border-primary/20 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <AlertCircle className="text-primary" />
-                    <p className="text-sm text-slate-400 italic">Showing standard track. Upload resume for a custom AI path.</p>
-                  </div>
-                  <button onClick={() => setActiveTab('overview')} className="text-xs font-bold text-primary underline underline-offset-4">Get Started</button>
-                </div>
-              )}
+
             </motion.div>
           )}
 

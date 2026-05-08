@@ -65,20 +65,7 @@ const NorthStarOrbit: React.FC<ProgressOrbitProps> = ({ progress, label }) => {
         <span className="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-bold">{label}</span>
       </div>
 
-      {/* Orbiting Dots */}
-      <AnimatePresence>
-        {[0, 120, 240].map((angle, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 rounded-full bg-white shadow-[0_0_10px_white]"
-            style={{ 
-              transformOrigin: '128px 128px',
-            }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "linear" }}
-          />
-        ))}
-      </AnimatePresence>
+
     </div>
   );
 };

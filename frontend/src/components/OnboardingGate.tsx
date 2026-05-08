@@ -83,16 +83,16 @@ const OnboardingGate: React.FC<OnboardingGateProps> = ({ onAnalysisComplete, onC
         }
       };
 
-      // Mark resume as uploaded in localStorage
-      localStorage.setItem('resumeUploaded', 'true');
-      localStorage.setItem('resumeData', JSON.stringify({
+      // Mark resume as uploaded in sessionStorage
+      sessionStorage.setItem('resumeUploaded', 'true');
+      sessionStorage.setItem('resumeData', JSON.stringify({
         fileName: file.name,
         uploadedAt: new Date().toISOString(),
         skills: fullData.profile?.skills || []
       }));
 
       // Cache the job results (runs exactly once)
-      localStorage.setItem('jobSearchCached', JSON.stringify({
+      sessionStorage.setItem('jobSearchCached', JSON.stringify({
         results: apiData.suggested_jobs || [],
         timestamp: new Date().toISOString()
       }));

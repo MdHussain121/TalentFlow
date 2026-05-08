@@ -204,17 +204,17 @@ const MockInterview: React.FC<MockInterviewProps> = ({
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="flex flex-col h-full max-h-[700px]"
+        className="flex flex-col h-full"
       >
         <div className="flex flex-col items-center justify-center py-8 text-center shrink-0">
           <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4 border border-emerald-500/20">
             <Trophy className="text-emerald-500" size={32} />
           </div>
-          <h3 className="text-2xl font-black italic mb-1 tracking-tighter">ASSESSMENT COMPLETE</h3>
-          <div className="text-5xl font-black text-primary mb-2">{score}%</div>
-          <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black mb-4">Readiness Index</p>
+          <h3 className="text-3xl font-black italic mb-4 tracking-tighter">ASSESSMENT COMPLETE</h3>
           {evaluation?.overall_feedback && (
-            <p className="text-xs text-slate-400 max-w-lg mx-auto italic px-6 leading-relaxed mb-6">"{evaluation.overall_feedback}"</p>
+            <div className="bg-primary/5 border border-primary/20 rounded-2xl p-8 mb-10 max-w-3xl mx-auto">
+              <p className="text-lg text-slate-300 italic leading-relaxed">"{evaluation.overall_feedback}"</p>
+            </div>
           )}
         </div>
 
@@ -222,10 +222,10 @@ const MockInterview: React.FC<MockInterviewProps> = ({
           {evaluation?.evaluations?.map((ev: any, i: number) => {
             const q = questions.find(question => question.id === ev.question_id);
             return (
-              <div key={i} className="bento-item p-6 border-l-4 transition-all" style={{ borderLeftColor: ev.status === 'Correct' ? '#10b981' : ev.status === 'Partial' ? '#f59e0b' : '#ef4444' }}>
-                <div className="flex justify-between items-start mb-4">
-                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Question {i + 1}</span>
-                  <span className={`text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter ${
+              <div key={i} className="glass p-10 border-l-8 transition-all rounded-3xl" style={{ borderLeftColor: ev.status === 'Correct' ? '#10b981' : ev.status === 'Partial' ? '#f59e0b' : '#ef4444' }}>
+                <div className="flex justify-between items-start mb-6">
+                  <span className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">Question {i + 1}</span>
+                  <span className={`text-xs font-black px-4 py-2 rounded-lg uppercase tracking-wider ${
                     ev.status === 'Correct' ? 'bg-emerald-500/10 text-emerald-500' : 
                     ev.status === 'Partial' ? 'bg-amber-500/10 text-amber-500' : 
                     'bg-red-500/10 text-red-500'
@@ -233,26 +233,35 @@ const MockInterview: React.FC<MockInterviewProps> = ({
                     {ev.status}
                   </span>
                 </div>
-                <p className="text-sm font-bold text-white mb-4 italic leading-tight">"{q?.question}"</p>
+                <h4 className="text-xl font-bold text-white mb-8 italic leading-tight">"{q?.question}"</h4>
                 
-                <div className="space-y-4">
-                  <div className="bg-white/5 rounded-xl p-4 border border-white/5">
-                    <p className="text-[9px] font-black text-slate-500 uppercase mb-2 tracking-widest">Your Answer</p>
-                    <p className="text-xs text-slate-300">{answers[ev.question_id] || "No response provided."}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-white/5 rounded-2xl p-6 border border-white/5">
+                    <p className="text-[10px] font-black text-slate-500 uppercase mb-3 tracking-widest">Your Response</p>
+                    <p className="text-sm text-slate-300 leading-relaxed">{answers[ev.question_id] || "No response provided."}</p>
                   </div>
 
-                  {ev.status !== 'Correct' && (
-                    <div className="bg-red-500/5 rounded-xl p-4 border border-red-500/10">
-                      <p className="text-[9px] font-black text-red-500/70 uppercase mb-2 tracking-widest">Identified Mistake</p>
-                      <p className="text-xs text-red-200/80 leading-relaxed">{ev.mistake}</p>
-                    </div>
-                  )}
+                  <div className="flex flex-col gap-6">
+                    {ev.status !== 'Correct' && (
+                      <div className="bg-red-500/5 rounded-2xl p-6 border border-red-500/10">
+                        <p className="text-[10px] font-black text-red-500/70 uppercase mb-3 tracking-widest">Growth Opportunity</p>
+                        <p className="text-sm text-red-200/80 leading-relaxed font-medium">{ev.mistake}</p>
+                      </div>
+                    )}
 
-                  <div className="bg-emerald-500/5 rounded-xl p-4 border border-emerald-500/10">
-                    <p className="text-[9px] font-black text-emerald-500/70 uppercase mb-2 tracking-widest">Ideal Answer</p>
-                    <p className="text-xs text-emerald-100/80 leading-relaxed font-medium">{ev.correct_answer}</p>
+                    <div className="bg-emerald-500/5 rounded-2xl p-6 border border-emerald-500/10">
+                      <p className="text-[10px] font-black text-emerald-500/70 uppercase mb-3 tracking-widest">Optimal Analysis</p>
+                      <p className="text-sm text-emerald-100/80 leading-relaxed font-bold">{ev.correct_answer}</p>
+                    </div>
                   </div>
                 </div>
+                
+                {ev.feedback && (
+                  <div className="mt-6 pt-6 border-t border-white/5">
+                    <p className="text-[10px] font-black text-primary uppercase mb-2 tracking-widest">AI Coaching Tip</p>
+                    <p className="text-sm text-slate-400 italic">{ev.feedback}</p>
+                  </div>
+                )}
               </div>
             );
           })}
@@ -263,7 +272,7 @@ const MockInterview: React.FC<MockInterviewProps> = ({
             onClick={() => onReturn ? onReturn() : window.location.reload()}
             className="flex-grow py-4 rounded-xl bg-primary text-white text-xs font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
           >
-            RETURN TO COMMAND CENTER
+            BACK TO OVERVIEW
           </button>
         </div>
       </motion.div>

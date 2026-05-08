@@ -66,7 +66,9 @@ const SkillHeatmap: React.FC<{ skills: Skill[] }> = ({ skills }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1, ease: "easeOut" }}
-            className="glass rounded-2xl p-4 border border-white/10 hover:border-white/20 transition-all group"
+            className={`glass rounded-2xl p-4 border transition-all group relative overflow-hidden ${
+              skill.level >= 85 ? 'border-primary/50' : 'border-white/10 hover:border-white/20'
+            }`}
           >
             {/* Skill Level Indicator Bar (vertical) */}
             <div className="relative h-24 w-full flex items-end justify-center mb-3">
@@ -77,11 +79,12 @@ const SkillHeatmap: React.FC<{ skills: Skill[] }> = ({ skills }) => {
                   transition={{ duration: 1, delay: index * 0.1, ease: "easeOut" }}
                   className="absolute bottom-0 left-0 right-0 rounded-full transition-all"
                   style={{
-                    backgroundColor: skill.color,
-                    boxShadow: `0 0 20px ${skill.color}66`
+                    backgroundColor: skill.color
                   }}
                 />
               </div>
+              
+              {/* Aura Intensity Glow removed */}
               {/* Level number */}
               <div className="relative z-10 bg-black/50 rounded-full px-2 py-1 text-xs font-bold text-white">
                 {skill.level}%

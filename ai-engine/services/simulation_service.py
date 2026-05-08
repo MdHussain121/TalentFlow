@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 import os
-from typing import Dict, Any
+from typing import List, Dict, Any
 
 from services.llm_service import llm_service
 
