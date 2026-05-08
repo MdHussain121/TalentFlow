@@ -36,18 +36,14 @@ const App: React.FC = () => {
     return window.location.pathname === '/dashboard';
   });
 
-  const [showOnboarding, setShowOnboarding] = useState(() => {
-    const resumeExists = localStorage.getItem('resumeUploaded') === 'true';
-    return !resumeExists;
-  });
+  const [showOnboarding, setShowOnboarding] = useState(true);
 
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Check resume status when component mounts or when navigating to dashboard
+  // Ensure we show onboarding on every fresh start
   useEffect(() => {
     if (isStarted) {
-      const resumeExists = localStorage.getItem('resumeUploaded') === 'true';
-      setShowOnboarding(!resumeExists);
+      // We keep showOnboarding true until the user finishes the upload in this session
     }
   }, [isStarted]);
 
