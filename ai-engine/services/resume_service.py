@@ -31,13 +31,18 @@ class ResumeService:
         # 1. Extract text based on file type
         text = ""
         try:
-            if filename.endswith(".pdf"):
+            if filename.lower().endswith(".pdf"):
                 text = self.extract_text_from_pdf(file_content)
-            elif filename.endswith(".docx"):
+            elif filename.lower().endswith(".docx"):
                 text = self.extract_text_from_docx(file_content)
             else:
-                text = file_content.decode("utf-8")
+                # Fallback for .txt or other text files
+                try:
+                    text = file_content.decode("utf-8")
+                except UnicodeDecodeError:
+                    text = file_content.decode("latin-1") # Fallback to latin-1 if utf-8 fails
         except Exception as e:
+            print(f"Extraction Error for {filename}: {e}")
             return {"error": f"Failed to parse file: {str(e)}"}
 
         if not text.strip():

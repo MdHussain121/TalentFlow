@@ -44,6 +44,10 @@ class LLMService:
                 response.raise_for_status()
                 data = response.json()
                 return data["choices"][0]["message"]["content"]
+        except Exception as e:
+            print(f"NVIDIA API Error: {e}")
+            raise e
+
     async def generate_chat(self, messages: List[Dict[str, str]], temperature: float = 0.7, max_tokens: int = 1024) -> str:
         if not self.api_key:
             return "Error: NVIDIA_API_KEY is missing. Please configure it in your .env file."
