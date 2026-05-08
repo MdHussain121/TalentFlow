@@ -1,36 +1,36 @@
 import os
-import google.generativeai as genai
 from typing import List
 from dotenv import load_dotenv
+from openai import OpenAI
 
 load_dotenv()
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+client = OpenAI(
+    base_url="https://integrate.api.nvidia.com/v1",
+    api_key=os.getenv("NVIDIA_API_KEY")
+)
 
 def get_embedding(text: str) -> List[float]:
-    """Generates a 768-dimensional embedding using Gemini."""
+    """Generates a 1024-dimensional embedding using NVIDIA NIM."""
     try:
-        result = genai.embed_content(
-            model="models/embedding-001",
-            content=text,
-            task_type="retrieval_document",
-            title="TalentFlow Profile"
+        response = client.embeddings.create(
+            input=[text],
+            model="nvidia/nv-embedqa-e5-v5"
         )
-        return result['embedding']
+        return response.data[0].embedding
     except Exception as e:
         print(f"Error generating embedding: {e}")
-        # Return a mock vector of 768 zeros if it fails (for development without API key)
-        return [0.0] * 768
+        # Return a mock vector of 1024 zeros if it fails
+        return [0.0] * 1024
 
 def get_batch_embeddings(texts: List[str]) -> List[List[float]]:
-    """Generates embeddings for a batch of texts."""
+    """Generates embeddings for a batch of texts using NVIDIA NIM."""
     try:
-        result = genai.embed_content(
-            model="models/embedding-001",
-            content=texts,
-            task_type="retrieval_document"
+        response = client.embeddings.create(
+            input=texts,
+            model="nvidia/nv-embedqa-e5-v5"
         )
-        return result['embeddings']
+        return [item.embedding for item in response.data]
     except Exception as e:
         print(f"Error generating batch embeddings: {e}")
-        return [[0.0] * 768 for _ in texts]
+        return [[0.0] * 1024 for _ in texts]

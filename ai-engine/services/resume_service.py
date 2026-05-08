@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 load_dotenv()
 import os
-import google.generativeai as genai
 from typing import Dict, Any, List
 from services.jsearch_service import jsearch_service
 

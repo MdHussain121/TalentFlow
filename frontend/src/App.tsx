@@ -13,6 +13,7 @@ import {
   Settings,
   ChevronRight,
   Users,
+  Video,
   Briefcase,
   FileText,
   Map,
@@ -27,6 +28,7 @@ import NeuralSearch from './components/NeuralSearch';
 import ResumeUpload from './components/ResumeUpload';
 import AIChatbot from './components/AIChatbot';
 import LandingPage from './components/LandingPage';
+import MockInterview from './components/MockInterview';
 
 const App: React.FC = () => {
   const [isStarted, setIsStarted] = useState(() => {
@@ -52,6 +54,7 @@ const App: React.FC = () => {
   }, []);
 
   const [suggestedJobs, setSuggestedJobs] = useState<any[]>([]);
+  const [selectedJob, setSelectedJob] = useState<any>(null);
   const [roadmap, setRoadmap] = useState<any>(null);
   const [feedback, setFeedback] = useState<{message: string, type: 'success' | 'info'} | null>(null);
   const [skills, setSkills] = useState([
@@ -155,6 +158,7 @@ const App: React.FC = () => {
           {[
             { id: 'overview', label: 'Overview', icon: <BarChart3 size={18} /> },
             { id: 'skills', label: 'Skill Heatmap', icon: <Cpu size={18} /> },
+            { id: 'interview', label: 'Mock Interview', icon: <Sparkles size={18} /> },
             { id: 'realtime', label: 'Real-Time Jobs', icon: <Globe size={18} /> },
             { id: 'roadmap', label: 'Crack Roadmap', icon: <Map size={18} /> },
             { id: 'circles', label: 'Peer Circles', icon: <Users size={18} /> },
@@ -205,7 +209,7 @@ const App: React.FC = () => {
                     Your Career Orbit is Expanding
                   </h2>
                   <p className="text-slate-400 max-w-md mb-8">
-                    Based on your recent GitHub commits and growth momentum, your readiness score has increased by <span className="text-emerald-500 font-bold">+12%</span> this week.
+                    Based on your recent GitHub commits and mock interview sentiment, your readiness score has increased by <span className="text-emerald-500 font-bold">+12%</span> this week.
                   </p>
                 </div>
               </div>
@@ -219,7 +223,7 @@ const App: React.FC = () => {
               </div>
 
               {/* Skill Heatmap Card */}
-              <div className="col-span-1 md:col-span-1 lg:col-span-4 bento-item flex flex-col min-h-[400px]">
+              <div className="col-span-1 md:col-span-1 lg:col-span-8 bento-item flex flex-col min-h-[400px]">
                 <div className="p-6 border-b border-white/5">
                   <h3 className="font-bold flex items-center gap-2 text-sm">
                     <Cpu size={18} className="text-primary" /> Live Skill Heatmap
@@ -229,6 +233,21 @@ const App: React.FC = () => {
                   <SkillHeatmap skills={skills} />
                 </div>
               </div>
+
+            </motion.div>
+          )}
+
+          {activeTab === 'interview' && (
+            <motion.div
+              key="interview"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bento-item p-10 min-h-[600px] flex flex-col"
+            >
+              <MockInterview
+                jobTitle={selectedJob?.title}
+                company={selectedJob?.company}
+              />
             </motion.div>
           )}
 
@@ -289,10 +308,13 @@ const App: React.FC = () => {
                       </div>
                       <button
                         onClick={() => {
+                          setSelectedJob(job);
+                          setActiveTab('interview');
                           showFeedback(`Setting up ${job.title} Mock Interview...`);
                         }}
                         className="w-full py-2.5 rounded-lg bg-emerald-500/10 text-emerald-500 text-[10px] font-bold border border-emerald-500/20 hover:bg-emerald-500/20 transition-all flex items-center justify-center gap-2"
                       >
+                        <Sparkles size={12} /> START MOCK INTERVIEW
                       </button>
                     </div>
                   </div>

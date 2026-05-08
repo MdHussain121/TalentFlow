@@ -1,9 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 import os
-import google.generativeai as genai
 from typing import Dict, Any
-
 from services.llm_service import llm_service
 
 class CommunicationAnalyzer:
@@ -29,8 +27,8 @@ class CommunicationAnalyzer:
         }}
         """
         try:
-            response = self.model.generate_content(prompt)
-            return response.text
+            response = await self.model.generate_content(prompt)
+            return response
         except Exception as e:
             return {"error": str(e)}
 

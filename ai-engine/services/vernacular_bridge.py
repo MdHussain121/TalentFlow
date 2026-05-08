@@ -1,11 +1,6 @@
 from dotenv import load_dotenv
 load_dotenv()
 import os
-import google.generativeai as genai
-from dotenv import load_dotenv
-
-load_dotenv()
-
 from services.llm_service import llm_service
 
 class VernacularBridge:
@@ -22,8 +17,8 @@ class VernacularBridge:
         Return only the formalized English translation.
         """
         try:
-            response = self.model.generate_content(prompt)
-            return response.text.strip()
+            response = await self.model.generate_content(prompt)
+            return response.strip()
         except Exception as e:
             print(f"Translation error: {e}")
             return f"[Error in translation: {text}]"

@@ -1,15 +1,13 @@
 from dotenv import load_dotenv
 load_dotenv()
 import os
-import google.generativeai as genai
 from typing import Dict, Any
-from dotenv import load_dotenv
 
-load_dotenv()
+from services.llm_service import llm_service
 
 class SimulationService:
     def __init__(self):
-        self.provider = "nvidia" if os.getenv("NVIDIA_API_KEY") else "gemini"
+        self.model = llm_service
 
     async def generate_day_in_life(self, role: str, company: str = "a tech startup"):
         prompt = f"""
