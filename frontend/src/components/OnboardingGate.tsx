@@ -154,6 +154,7 @@ const OnboardingGate: React.FC<OnboardingGateProps> = ({ onAnalysisComplete, onC
                 exit={{ opacity: 0, y: -10 }}
               >
                 <input
+                  id="resume-upload"
                   ref={fileInputRef}
                   type="file"
                   onChange={handleFileSelect}
@@ -161,9 +162,9 @@ const OnboardingGate: React.FC<OnboardingGateProps> = ({ onAnalysisComplete, onC
                   accept=".pdf,.docx,.txt"
                 />
 
-                <div
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full glass-card p-10 flex flex-col items-center justify-center gap-4 border-2 border-dashed border-white/20 hover:border-primary/50 transition-all cursor-pointer group"
+                <label
+                  htmlFor="resume-upload"
+                  className="w-full glass-card p-10 flex flex-col items-center justify-center gap-4 border-2 border-dashed border-white/20 hover:border-primary/50 transition-all cursor-pointer group block"
                 >
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <Upload className="text-primary" size={32} />
@@ -172,16 +173,10 @@ const OnboardingGate: React.FC<OnboardingGateProps> = ({ onAnalysisComplete, onC
                     <p className="text-lg font-bold text-white mb-1">Drop your resume here</p>
                     <p className="text-xs text-slate-500">PDF, DOCX, or TXT (Max 10MB)</p>
                   </div>
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      fileInputRef.current?.click();
-                    }}
-                    className="px-6 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-all flex items-center gap-2"
-                  >
+                  <div className="px-6 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-all flex items-center gap-2">
                     Browse Files <ArrowRight size={16} />
-                  </button>
-                </div>
+                  </div>
+                </label>
 
                 <p className="text-center text-[10px] text-slate-500 mt-6">
                   By uploading, you agree to our AI-powered analysis for personalized job matching
