@@ -27,12 +27,14 @@ interface MockInterviewProps {
   jobTitle?: string;
   company?: string;
   onComplete?: (score: number) => void;
+  onReturn?: () => void;
 }
 
 const MockInterview: React.FC<MockInterviewProps> = ({ 
   jobTitle, 
   company,
-  onComplete 
+  onComplete,
+  onReturn
 }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIdx, setCurrentIdx] = useState(-1); // -1 = loading/intro
@@ -194,7 +196,7 @@ const MockInterview: React.FC<MockInterviewProps> = ({
         </p>
         <div className="text-6xl font-black text-primary mb-8">{score}%</div>
         <button 
-          onClick={() => window.location.reload()}
+          onClick={() => onReturn ? onReturn() : window.location.reload()}
           className="px-8 py-3 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-all"
         >
           Return to Dashboard

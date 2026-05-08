@@ -33,7 +33,6 @@ import MockInterview from './components/MockInterview';
 import OnboardingGate from './components/OnboardingGate';
 
 const App: React.FC = () => {
-  const [interviewContext, setInterviewContext] = useState<{title: string, company: string} | null>(null);
   const [isStarted, setIsStarted] = useState(() => {
     return window.location.pathname === '/dashboard';
   });
@@ -344,6 +343,10 @@ const App: React.FC = () => {
               <MockInterview
                 jobTitle={selectedJob?.title}
                 company={selectedJob?.company}
+                onReturn={() => {
+                  setSelectedJob(null);
+                  setActiveTab('overview');
+                }}
               />
             </motion.div>
           )}
