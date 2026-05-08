@@ -22,6 +22,7 @@ import {
   Loader2
 } from 'lucide-react';
 import SkillHeatmap from './components/SkillHeatmap';
+import PeerCircles from './components/PeerCircles';
 import VoiceInterview from './components/VoiceInterview';
 import NorthStarOrbit from './components/NorthStarOrbit';
 import NeuralSearch from './components/NeuralSearch';
@@ -485,17 +486,7 @@ const App: React.FC = () => {
           )}
 
           {activeTab === 'circles' && (
-            <motion.div
-              key="circles"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-20 glass rounded-3xl border border-white/5"
-            >
-              <Users className="mx-auto text-primary mb-6 opacity-20" size={64} />
-              <h3 className="text-2xl font-bold mb-2">Peer Mock Circles</h3>
-              <p className="text-slate-400 max-w-md mx-auto">Pairing you with candidates aiming for similar roles. Next session starts in <span className="text-white">12:40</span>.</p>
-              <button className="mt-8 px-8 py-3 rounded-xl bg-primary font-bold shadow-xl shadow-primary/20">Join Waitlist</button>
-            </motion.div>
+            <PeerCircles />
           )}
         </AnimatePresence>
 

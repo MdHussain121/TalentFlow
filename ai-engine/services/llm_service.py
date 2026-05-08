@@ -10,21 +10,23 @@ if os.path.exists(".env"):
 elif os.path.exists("../.env"):
     load_dotenv("../.env")
 else:
-    load_dotenv() # Fallback to standard behavior
+    load_dotenv()
 
 class LLMService:
     def __init__(self):
         self.api_key = os.getenv("NVIDIA_API_KEY")
         self.base_url = "https://integrate.api.nvidia.com/v1/chat/completions"
         self.model = "meta/llama-3.1-8b-instruct"
-        
+
         if not self.api_key:
-            print("Warning: NVIDIA_API_KEY not found in environment.")
+            print("⚠️  Warning: NVIDIA_API_KEY not found in environment.")
+        else:
+            print(f"✅ NVIDIA API Key loaded ({len(self.api_key)} chars)")
 
     async def generate_content(self, prompt: str, system_instruction: str = "") -> str:
         if not self.api_key:
             return "Error: NVIDIA_API_KEY is missing. Please configure it in your .env file."
-            
+
         try:
             messages = []
             if system_instruction:
@@ -39,7 +41,7 @@ class LLMService:
                 "max_tokens": 2048,
                 "stream": False
             }
-            
+
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json"
@@ -47,12 +49,12 @@ class LLMService:
 
             async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.post(self.base_url, json=payload, headers=headers)
-                
+
                 if response.status_code != 200:
                     error_text = response.text
                     print(f"NVIDIA API Error ({response.status_code}): {error_text}")
                     return f"Error: NVIDIA AI is currently unavailable. ({response.status_code})"
-                
+
                 data = response.json()
                 return data["choices"][0]["message"]["content"]
         except Exception as e:
@@ -62,7 +64,7 @@ class LLMService:
     async def generate_chat(self, messages: List[Dict[str, str]], temperature: float = 0.7, max_tokens: int = 1024) -> str:
         if not self.api_key:
             return "Error: NVIDIA_API_KEY is missing. Please configure it in your .env file."
-            
+
         if not messages:
             return "Error: No messages provided for chat."
 
@@ -75,7 +77,7 @@ class LLMService:
                 "max_tokens": max_tokens,
                 "stream": False
             }
-            
+
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json"
@@ -83,12 +85,12 @@ class LLMService:
 
             async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.post(self.base_url, json=payload, headers=headers)
-                
+
                 if response.status_code != 200:
                     error_text = response.text
                     print(f"NVIDIA Chat API Error ({response.status_code}): {error_text}")
                     return f"Error: AI chat service is currently unavailable. ({response.status_code})"
-                
+
                 data = response.json()
                 return data["choices"][0]["message"]["content"]
         except Exception as e:
