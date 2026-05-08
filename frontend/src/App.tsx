@@ -35,11 +35,20 @@ const App: React.FC = () => {
   const [isStarted, setIsStarted] = useState(() => {
     return window.location.pathname === '/dashboard';
   });
-  const [hasResume, setHasResume] = useState(() => {
-    return localStorage.getItem('resumeUploaded') === 'true';
-  });
+  const [hasResume, setHasResume] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
+
+  // Check resume status when component mounts or when navigating to dashboard
+  useEffect(() => {
+    if (isStarted) {
+      const resumeExists = localStorage.getItem('resumeUploaded') === 'true';
+      if (!resumeExists) {
+        setIsAnalyzing(true);
+      }
+      setHasResume(resumeExists);
+    }
+  }, [isStarted]);
 
   // Update URL when navigation state changes
   useEffect(() => {
@@ -72,17 +81,8 @@ const App: React.FC = () => {
   const [readinessScore, setReadinessScore] = useState(87);
 
   const onLandingStart = () => {
-    // Check if resume exists before allowing dashboard access
-    const resumeExists = localStorage.getItem('resumeUploaded') === 'true';
-    if (resumeExists) {
-      window.history.pushState({}, '', '/dashboard');
-      setIsStarted(true);
-    } else {
-      // Trigger onboarding gate instead
-      window.history.pushState({}, '', '/dashboard');
-      setIsStarted(true);
-      setIsAnalyzing(true);
-    }
+    window.history.pushState({}, '', '/dashboard');
+    setIsStarted(true);
   };
 
   const onNavigateToLanding = () => {

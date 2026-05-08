@@ -16,7 +16,7 @@ class LLMService:
     def __init__(self):
         self.api_key = os.getenv("NVIDIA_API_KEY")
         self.base_url = "https://integrate.api.nvidia.com/v1/chat/completions"
-        self.model = "nvidia_nim/z-ai/glm-4.7"
+        self.model = "glm-4.7"
         
         if not self.api_key:
             print("Warning: NVIDIA_API_KEY not found in environment.")
