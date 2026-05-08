@@ -7,7 +7,9 @@ import {
   Loader2, 
   Trophy, 
   AlertCircle,
-  HelpCircle
+  HelpCircle,
+  Briefcase,
+  Zap
 } from 'lucide-react';
 
 interface Question {
@@ -28,21 +30,25 @@ interface MockInterviewProps {
 }
 
 const MockInterview: React.FC<MockInterviewProps> = ({ 
-  jobTitle = "Software Engineer", 
-  company = "a tech company",
+  jobTitle, 
+  company,
   onComplete 
 }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIdx, setCurrentIdx] = useState(-1); // -1 = loading/intro
   const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [score, setScore] = useState(0);
 
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!jobTitle || !company) return;
+
     const loadInterview = async () => {
+      setIsLoading(true);
+      setError(null);
       try {
         const response = await fetch('http://localhost:8000/interview/generate', {
           method: 'POST',
@@ -97,6 +103,23 @@ const MockInterview: React.FC<MockInterviewProps> = ({
     setIsFinished(true);
     if (onComplete) onComplete(Math.round(finalScore));
   };
+
+  if (!jobTitle) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[500px] text-center p-6 bento-item">
+        <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 border border-primary/20">
+          <Briefcase className="text-primary" size={32} />
+        </div>
+        <h3 className="text-2xl font-black text-white mb-2 italic">SELECT A TARGET ROLE</h3>
+        <p className="text-sm text-slate-400 mb-8 max-w-md mx-auto">
+          To generate specialized technical questions, please select a specific role from the <span className="text-primary font-bold">Real-Time Jobs</span> section first.
+        </p>
+        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+          <Zap size={12} className="text-primary" /> Personalized AI Simulation Required
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

@@ -33,6 +33,7 @@ import MockInterview from './components/MockInterview';
 import OnboardingGate from './components/OnboardingGate';
 
 const App: React.FC = () => {
+  const [interviewContext, setInterviewContext] = useState<{title: string, company: string} | null>(null);
   const [isStarted, setIsStarted] = useState(() => {
     return window.location.pathname === '/dashboard';
   });
