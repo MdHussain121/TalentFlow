@@ -138,7 +138,7 @@ const App: React.FC = () => {
   const generateRoadmapForJob = async (job: any) => {
     showFeedback(`Generating Custom Roadmap for ${job.title}...`);
     try {
-      const response = await fetch('http://localhost:3000/ai/roadmap/generate', {
+      const response = await fetch('http://localhost:8000/roadmap/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

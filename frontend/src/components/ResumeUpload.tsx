@@ -29,7 +29,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onUpload }) => {
       formData.append('file', file);
 
       // Connect to Live AI Engine for Resume Analysis
-      const response = await fetch('http://localhost:3000/ai/resume/suggest', {
+      const response = await fetch('http://localhost:8000/resume/suggest', {
         method: 'POST',
         body: formData
       });

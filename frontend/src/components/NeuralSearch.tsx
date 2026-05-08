@@ -21,7 +21,7 @@ const NeuralSearch: React.FC<NeuralSearchProps> = ({ onSearchResults }) => {
     
     setIsSearching(true);
     try {
-      const response = await fetch('http://localhost:3000/ai/search', {
+      const response = await fetch('http://localhost:8000/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: searchQuery })

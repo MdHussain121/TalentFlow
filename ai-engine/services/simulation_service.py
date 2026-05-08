@@ -49,11 +49,15 @@ class SimulationService:
 
     async def generate_technical_interview(self, role: str, company: str = "a tech company"):
         prompt = f"""
-        Generate a comprehensive technical mock interview for a {role} position at {company}.
-        The interview must include exactly:
-        - 3 Multiple Choice Questions (MCQ)
-        - 2 Short Answer Questions (1-2 sentences)
-        - 1 Long Answer Question (Problem-solving or Architectural)
+        Generate a unique and highly specialized technical mock interview for a {role} position at {company}.
+        DO NOT use generic questions. Focus on actual technical challenges, edge cases, and architectural patterns relevant to {role}.
+        
+        The interview must include:
+        - 3 Multiple Choice Questions (MCQ) - specifically testing deep technical understanding.
+        - 2 Short Answer Questions (1-2 sentences) - testing conceptual clarity.
+        - 1 Long Answer Question (Problem-solving or Architectural) - a realistic scenario-based challenge.
+        
+        Ensure the questions are DIFFERENT every time by focusing on different sub-topics of {role}.
 
         Return the data as a clean JSON object with this structure:
         {{

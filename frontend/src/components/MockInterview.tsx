@@ -44,7 +44,7 @@ const MockInterview: React.FC<MockInterviewProps> = ({
   useEffect(() => {
     const loadInterview = async () => {
       try {
-        const response = await fetch('http://localhost:3000/ai/interview/generate', {
+        const response = await fetch('http://localhost:8000/interview/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ role: jobTitle, company })

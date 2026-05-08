@@ -10,7 +10,7 @@ interface Skill {
 
 const SkillHeatmap: React.FC<{ skills: Skill[] }> = ({ skills }) => {
   // Calculate average skill level for overall visualization
-  const_avgLevel = skills.length > 0
+  const avgLevel = skills.length > 0
     ? skills.reduce((sum, skill) => sum + skill.level, 0) / skills.length
     : 0;
 

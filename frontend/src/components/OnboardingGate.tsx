@@ -56,7 +56,7 @@ const OnboardingGate: React.FC<OnboardingGateProps> = ({ onAnalysisComplete, onC
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('http://localhost:3000/ai/resume/suggest', {
+      const response = await fetch('http://localhost:8000/resume/suggest', {
         method: 'POST',
         body: formData
       });

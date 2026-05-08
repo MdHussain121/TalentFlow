@@ -105,10 +105,7 @@ async def analyze_pitch(data: Dict[str, str] = Body(...)):
 
 @app.post("/interview/generate")
 async def generate_interview(data: Dict[str, str] = Body(...)):
-    cache_key = f"interview_{data.get('role')}_{data.get('company')}"
-    if cache_key in request_cache:
-        return request_cache[cache_key]
-
+    # Cache removed to ensure specialized questions every time as per user request
     try:
         role = data.get("role", "Software Engineer")
         company = data.get("company", "a tech company")
@@ -120,9 +117,9 @@ async def generate_interview(data: Dict[str, str] = Body(...)):
         import json
         try:
             parsed = json.loads(result)
-            request_cache[cache_key] = parsed
             return parsed
-        except:
+        except Exception as e:
+            print(f"JSON Parse Error: {e}\nRaw result: {result}")
             return {"error": "Failed to parse AI response", "raw": result}
     except Exception as e:
         if "429" in str(e):
