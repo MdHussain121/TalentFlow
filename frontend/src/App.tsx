@@ -35,6 +35,10 @@ const App: React.FC = () => {
   const [isStarted, setIsStarted] = useState(() => {
     return window.location.pathname === '/dashboard';
   });
+  const [hasResume, setHasResume] = useState(() => {
+    return localStorage.getItem('resumeUploaded') === 'true';
+  });
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
 
   // Update URL when navigation state changes
@@ -68,11 +72,27 @@ const App: React.FC = () => {
   const [readinessScore, setReadinessScore] = useState(87);
 
   const onLandingStart = () => {
-    window.history.pushState({}, '', '/dashboard');
-    setIsStarted(true);
+    // Check if resume exists before allowing dashboard access
+    const resumeExists = localStorage.getItem('resumeUploaded') === 'true';
+    if (resumeExists) {
+      window.history.pushState({}, '', '/dashboard');
+      setIsStarted(true);
+    } else {
+      // Trigger onboarding gate instead
+      window.history.pushState({}, '', '/dashboard');
+      setIsStarted(true);
+      setIsAnalyzing(true);
+    }
   };
 
   const onNavigateToLanding = () => {
+    // Optionally clear resume data when going back to landing
+    // Uncomment to enable reset on logout:
+    // localStorage.removeItem('resumeUploaded');
+    // localStorage.removeItem('resumeData');
+    // localStorage.removeItem('jobSearchCached');
+    // setHasResume(false);
+
     window.history.pushState({}, '', '/');
     setIsStarted(false);
   };
@@ -100,8 +120,28 @@ const App: React.FC = () => {
     setSkills(newSkills);
     setReadinessScore(prev => Math.min(prev + 5, 100));
 
+    // Update hasResume state
+    setHasResume(true);
+    setIsAnalyzing(false);
+
+    // Switch to jobs tab to show results
     setActiveTab('realtime');
     showFeedback("AI Analysis Complete! Your Skill Heatmap has been updated.", "success");
+  };
+
+  const handleOnboardingComplete = (data: any) => {
+    // Load cached job search results
+    const cachedData = localStorage.getItem('jobSearchCached');
+    if (cachedData) {
+      try {
+        const parsed = JSON.parse(cachedData);
+        setSuggestedJobs(parsed.results);
+      } catch (e) {
+        console.error('Failed to load cached results');
+      }
+    }
+
+    handleResumeAnalysis(data);
   };
 
   const generateRoadmapForJob = async (job: any) => {
@@ -127,6 +167,11 @@ const App: React.FC = () => {
 
   if (!isStarted) {
     return <LandingPage onStart={onLandingStart} />;
+  }
+
+  // Show OnboardingGate if user is in dashboard but has no resume
+  if (isAnalyzing || !hasResume) {
+    return <OnboardingGate onAnalysisComplete={handleOnboardingComplete} />;
   }
 
   return (
@@ -215,16 +260,8 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              {/* Resume Upload Card */}
-              <div className="col-span-1 md:col-span-1 lg:col-span-4 bento-item p-6 flex flex-col justify-center">
-                <h3 className="font-bold mb-4 flex items-center gap-2">
-                  <FileText size={18} className="text-primary" /> Smart Resume Match
-                </h3>
-                <ResumeUpload onUpload={handleResumeAnalysis} />
-              </div>
-
               {/* Skill Heatmap Card */}
-              <div className="col-span-1 md:col-span-1 lg:col-span-8 bento-item flex flex-col min-h-[400px]">
+              <div className="col-span-1 md:col-span-1 lg:col-span-4 bento-item flex flex-col min-h-[400px]">
                 <div className="p-6 border-b border-white/5">
                   <h3 className="font-bold flex items-center gap-2 text-sm">
                     <Cpu size={18} className="text-primary" /> Live Skill Heatmap
