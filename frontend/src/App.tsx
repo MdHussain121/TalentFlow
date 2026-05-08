@@ -303,7 +303,7 @@ const App: React.FC = () => {
                   <div className="bento-item p-8 bg-primary/5 border-primary/20 flex items-center justify-between group cursor-pointer" onClick={() => setActiveTab('realtime')}>
                     <div>
                       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-1">New Roles Found</p>
-                      <h4 className="text-2xl font-black text-white italic">12 MATCHES</h4>
+                      <h4 className="text-2xl font-black text-white italic">{suggestedJobs.length} MATCHES</h4>
                     </div>
                     <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
                       <Globe size={24} />
@@ -444,10 +444,22 @@ const App: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {(roadmap?.weeks || [
-                  { week: 1, focus: "Tech Stack Mastery", tasks: ["Deep dive into React 19", "Advanced TypeScript"] },
-                  { week: 2, focus: "System Architecture", tasks: ["Vector DB Integration", "Scaling API Gateway"] },
-                  { week: 3, focus: "Mock Simulation", tasks: ["Voice Pitch Drill", "Logic AST Analysis"] },
-                  { week: 4, focus: "Final Deployment", tasks: ["Portfolio Freeze", "Application Blast"] }
+                  { week: 1, focus: "Tech Stack Mastery", tasks: [
+                    { title: "React 19 Hooks", description: "Mastering the latest concurrent features and useActionState." },
+                    { title: "TypeScript Generics", description: "Building type-safe reusable utility patterns." }
+                  ] },
+                  { week: 2, focus: "System Architecture", tasks: [
+                    { title: "Vector DBs", description: "Implementing semantic search with Pinecone or Chroma." },
+                    { title: "API Scaling", description: "Design patterns for high-throughput microservices." }
+                  ] },
+                  { week: 3, focus: "Mock Simulation", tasks: [
+                    { title: "Logic ASTs", description: "Understanding the underlying structure of your code." },
+                    { title: "Voice Pitch", description: "Perfecting your communication during technical drills." }
+                  ] },
+                  { week: 4, focus: "Final Deployment", tasks: [
+                    { title: "Portfolio Freeze", description: "Final quality check on all active production projects." },
+                    { title: "Application Blast", description: "Automated distribution to top-tier target roles." }
+                  ] }
                 ]).map((w: any, i: number) => (
                   <motion.div
                     key={i}
@@ -465,11 +477,20 @@ const App: React.FC = () => {
                       <h4 className="font-bold text-lg leading-tight">{w.focus}</h4>
                     </div>
 
-                    <div className="space-y-3">
-                      {(w.tasks || []).map((task: string, ti: number) => (
-                        <div key={ti} className="flex items-start gap-2 text-[11px] text-slate-400 group-hover:text-slate-300 transition-colors">
-                          <CheckCircle size={14} className="text-primary shrink-0 mt-0.5" />
-                          <span>{task}</span>
+                    <div className="space-y-4">
+                      {(w.tasks || []).map((task: any, ti: number) => (
+                        <div key={ti} className="flex flex-col gap-1.5 group/task">
+                          <div className="flex items-start gap-2.5">
+                            <CheckCircle size={14} className="text-primary shrink-0 mt-0.5 group-hover/task:scale-110 transition-transform" />
+                            <span className="text-[11px] font-bold text-white/90 group-hover/task:text-primary transition-colors">
+                              {typeof task === 'string' ? task : task.title}
+                            </span>
+                          </div>
+                          {typeof task !== 'string' && task.description && (
+                            <p className="pl-6 text-[10px] text-slate-500 leading-relaxed font-medium">
+                              {task.description}
+                            </p>
+                          )}
                         </div>
                       ))}
                     </div>

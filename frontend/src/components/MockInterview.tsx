@@ -9,7 +9,8 @@ import {
   AlertCircle,
   HelpCircle,
   Briefcase,
-  Zap
+  Zap,
+  Cpu
 } from 'lucide-react';
 
 interface Question {
@@ -86,24 +87,30 @@ const MockInterview: React.FC<MockInterviewProps> = ({
     }
   };
 
-  const calculateResults = () => {
-    let finalScore = 0;
-    questions.forEach(q => {
-      if (q.type === 'mcq') {
-        if (answers[q.id] === q.correct_answer) finalScore += 15;
-      } else if (q.type === 'short') {
-        const ans = (answers[q.id] || "").toLowerCase();
-        const keywords = q.ideal_keywords || [];
-        const matches = keywords.filter(k => ans.includes(k.toLowerCase()));
-        finalScore += (matches.length / Math.max(1, keywords.length)) * 15;
-      } else {
-        // Long answer - basic length check for simulation
-        if ((answers[q.id] || "").length > 50) finalScore += 25;
-      }
-    });
-    setScore(Math.round(finalScore));
-    setIsFinished(true);
-    if (onComplete) onComplete(Math.round(finalScore));
+  const [evaluation, setEvaluation] = useState<any>(null);
+  const [isEvaluating, setIsEvaluating] = useState(false);
+
+  const calculateResults = async () => {
+    setIsEvaluating(true);
+    try {
+      const response = await fetch('http://localhost:8000/interview/evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questions, answers })
+      });
+      const data = await response.json();
+      setEvaluation(data);
+      setScore(data.total_score || 0);
+      setIsFinished(true);
+      if (onComplete) onComplete(data.total_score || 0);
+    } catch (error) {
+      console.error("Evaluation failed", error);
+      setError("Failed to evaluate answers. Showing basic score.");
+      // Fallback basic score
+      setIsFinished(true);
+    } finally {
+      setIsEvaluating(false);
+    }
   };
 
   if (!jobTitle) {
@@ -119,6 +126,18 @@ const MockInterview: React.FC<MockInterviewProps> = ({
         <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
           <Zap size={12} className="text-primary" /> Personalized AI Simulation Required
         </div>
+      </div>
+    );
+  }
+
+  if (isEvaluating) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[500px] text-center">
+        <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mb-8 animate-pulse border border-primary/20">
+          <Cpu className="text-primary" size={40} />
+        </div>
+        <h3 className="text-2xl font-black text-white italic mb-2 tracking-tighter">NEURAL EVALUATION IN PROGRESS...</h3>
+        <p className="text-sm text-slate-400 max-w-sm mx-auto">TalentFlow AI is cross-referencing your answers with {jobTitle} specialized criteria.</p>
       </div>
     );
   }
@@ -183,24 +202,70 @@ const MockInterview: React.FC<MockInterviewProps> = ({
   if (isFinished) {
     return (
       <motion.div 
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="flex flex-col items-center justify-center py-10 text-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex flex-col h-full max-h-[700px]"
       >
-        <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6 border border-emerald-500/20">
-          <Trophy className="text-emerald-500" size={40} />
+        <div className="flex flex-col items-center justify-center py-8 text-center shrink-0">
+          <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4 border border-emerald-500/20">
+            <Trophy className="text-emerald-500" size={32} />
+          </div>
+          <h3 className="text-2xl font-black italic mb-1 tracking-tighter">ASSESSMENT COMPLETE</h3>
+          <div className="text-5xl font-black text-primary mb-2">{score}%</div>
+          <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black mb-4">Readiness Index</p>
+          {evaluation?.overall_feedback && (
+            <p className="text-xs text-slate-400 max-w-lg mx-auto italic px-6 leading-relaxed mb-6">"{evaluation.overall_feedback}"</p>
+          )}
         </div>
-        <h3 className="text-2xl font-bold mb-2">Interview Complete!</h3>
-        <p className="text-slate-400 mb-8 max-w-xs mx-auto">
-          Your readiness for the {jobTitle} role at {company} has been calculated.
-        </p>
-        <div className="text-6xl font-black text-primary mb-8">{score}%</div>
-        <button 
-          onClick={() => onReturn ? onReturn() : window.location.reload()}
-          className="px-8 py-3 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-all"
-        >
-          Return to Dashboard
-        </button>
+
+        <div className="flex-grow overflow-y-auto pr-2 space-y-6 custom-scrollbar mb-8">
+          {evaluation?.evaluations?.map((ev: any, i: number) => {
+            const q = questions.find(question => question.id === ev.question_id);
+            return (
+              <div key={i} className="bento-item p-6 border-l-4 transition-all" style={{ borderLeftColor: ev.status === 'Correct' ? '#10b981' : ev.status === 'Partial' ? '#f59e0b' : '#ef4444' }}>
+                <div className="flex justify-between items-start mb-4">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Question {i + 1}</span>
+                  <span className={`text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter ${
+                    ev.status === 'Correct' ? 'bg-emerald-500/10 text-emerald-500' : 
+                    ev.status === 'Partial' ? 'bg-amber-500/10 text-amber-500' : 
+                    'bg-red-500/10 text-red-500'
+                  }`}>
+                    {ev.status}
+                  </span>
+                </div>
+                <p className="text-sm font-bold text-white mb-4 italic leading-tight">"{q?.question}"</p>
+                
+                <div className="space-y-4">
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/5">
+                    <p className="text-[9px] font-black text-slate-500 uppercase mb-2 tracking-widest">Your Answer</p>
+                    <p className="text-xs text-slate-300">{answers[ev.question_id] || "No response provided."}</p>
+                  </div>
+
+                  {ev.status !== 'Correct' && (
+                    <div className="bg-red-500/5 rounded-xl p-4 border border-red-500/10">
+                      <p className="text-[9px] font-black text-red-500/70 uppercase mb-2 tracking-widest">Identified Mistake</p>
+                      <p className="text-xs text-red-200/80 leading-relaxed">{ev.mistake}</p>
+                    </div>
+                  )}
+
+                  <div className="bg-emerald-500/5 rounded-xl p-4 border border-emerald-500/10">
+                    <p className="text-[9px] font-black text-emerald-500/70 uppercase mb-2 tracking-widest">Ideal Answer</p>
+                    <p className="text-xs text-emerald-100/80 leading-relaxed font-medium">{ev.correct_answer}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="pt-4 border-t border-white/5 flex gap-4 shrink-0">
+          <button 
+            onClick={() => onReturn ? onReturn() : window.location.reload()}
+            className="flex-grow py-4 rounded-xl bg-primary text-white text-xs font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
+          >
+            RETURN TO COMMAND CENTER
+          </button>
+        </div>
       </motion.div>
     );
   }

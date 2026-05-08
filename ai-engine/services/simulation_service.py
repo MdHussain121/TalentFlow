@@ -101,4 +101,45 @@ class SimulationService:
                 "fallback": "Standard assessment mode triggered."
             }
 
+    async def evaluate_interview(self, questions: List[Dict[str, Any]], answers: Dict[str, Any]):
+        import json
+        prompt = f"""
+        Evaluate a candidate's mock interview performance.
+        
+        Questions and the candidate's answers are provided below:
+        {json.dumps([{"id": q['id'], "q": q['question'], "a": answers.get(str(q['id']), "No answer")} for q in questions], indent=2)}
+        
+        For each question, analyze the response based on technical accuracy and clarity.
+        Provide:
+        1. Status: 'Correct', 'Partial', or 'Incorrect'.
+        2. Mistake: Identify exactly what was wrong or missing in the answer.
+        3. Correct Answer: Provide the ideal, technically sound answer.
+        4. Feedback: A short tip on how to improve.
+        
+        Format the response as a valid JSON object:
+        {{
+            "total_score": 75,
+            "evaluations": [
+                {{
+                    "question_id": 1,
+                    "status": "Correct",
+                    "mistake": "None",
+                    "correct_answer": "...",
+                    "feedback": "..."
+                }}
+            ],
+            "overall_feedback": "A summary of the candidate's performance and areas for growth."
+        }}
+        """
+        try:
+            response = await self.model.generate_content(prompt)
+            text = response
+            if "```json" in text:
+                text = text.split("```json")[1].split("```")[0].strip()
+            elif "```" in text:
+                text = text.split("```")[1].split("```")[0].strip()
+            return json.loads(text)
+        except Exception as e:
+            return {"error": str(e), "total_score": 0, "evaluations": [], "overall_feedback": "Evaluation failed."}
+
 simulation_service = SimulationService()

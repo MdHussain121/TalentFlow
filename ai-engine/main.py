@@ -126,6 +126,12 @@ async def generate_interview(data: Dict[str, str] = Body(...)):
             return {"error": "AI Quota Exceeded. Please try again shortly.", "retry_after": 60}
         return {"error": str(e)}
 
+@app.post("/interview/evaluate")
+async def evaluate_interview(data: Dict[str, Any] = Body(...)):
+    questions = data.get("questions", [])
+    answers = data.get("answers", {})
+    return await simulation_service.evaluate_interview(questions, answers)
+
 from services.resume_service import resume_service
 from fastapi import FastAPI, Body, UploadFile, File
 

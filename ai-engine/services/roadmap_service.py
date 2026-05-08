@@ -28,7 +28,10 @@ class RoadmapService:
                 {{
                     "week": 1,
                     "focus": "Core Fundamentals",
-                    "tasks": ["Task 1", "Task 2"]
+                    "tasks": [
+                        {{"title": "Task 1", "description": "Short 1-sentence description"}},
+                        {{"title": "Task 2", "description": "Short 1-sentence description"}}
+                    ]
                 }}
             ],
             "resources": ["Link/Book 1", "Link/Book 2"]
@@ -49,10 +52,38 @@ class RoadmapService:
             return {
                 "target": f"{role} at {target_company}",
                 "weeks": [
-                    {"week": 1, "focus": "Tech Stack Mastery", "tasks": [f"Deep dive into role-specific requirements", "Bridge fundamental gaps"]},
-                    {"week": 2, "focus": "Advanced Systems", "tasks": ["Implement core logic modules", "Review architectural patterns"]},
-                    {"week": 3, "focus": "Interview Preparation", "tasks": ["Practice company-specific scenarios", "Optimize coding efficiency"]},
-                    {"week": 4, "focus": "Final Readiness", "tasks": ["Simulate technical assessments", "Finalize portfolio alignment"]}
+                    {
+                        "week": 1, 
+                        "focus": "Tech Stack Mastery", 
+                        "tasks": [
+                            {"title": "Role Alignment", "description": "Deep dive into the specific tech stack and role-specific requirements."},
+                            {"title": "Core Gaps", "description": "Identify and bridge fundamental gaps in your current skill set."}
+                        ]
+                    },
+                    {
+                        "week": 2, 
+                        "focus": "Advanced Systems", 
+                        "tasks": [
+                            {"title": "Logic Implementation", "description": "Implement core logic modules and business requirements for the target role."},
+                            {"title": "Architecture Review", "description": "Review and apply architectural patterns used by the target company."}
+                        ]
+                    },
+                    {
+                        "week": 3, 
+                        "focus": "Interview Preparation", 
+                        "tasks": [
+                            {"title": "Scenario Practice", "description": "Practice company-specific scenarios and technical interview questions."},
+                            {"title": "Efficiency Optimization", "description": "Focus on optimizing your coding efficiency and problem-solving speed."}
+                        ]
+                    },
+                    {
+                        "week": 4, 
+                        "focus": "Final Readiness", 
+                        "tasks": [
+                            {"title": "Simulation Drills", "description": "Simulate end-to-end technical assessments and peer interviews."},
+                            {"title": "Portfolio Lock", "description": "Finalize portfolio alignment and polish your presentation materials."}
+                        ]
+                    }
                 ],
                 "resources": ["Industry Best Practices", "TalentFlow AI Labs"]
             }
