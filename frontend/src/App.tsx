@@ -439,7 +439,7 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {(roadmap?.weeks || [
                   { week: 1, focus: "Tech Stack Mastery", tasks: ["Deep dive into React 19", "Advanced TypeScript"] },
                   { week: 2, focus: "System Architecture", tasks: ["Vector DB Integration", "Scaling API Gateway"] },
@@ -451,7 +451,7 @@ const App: React.FC = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.1 }}
-                    className="bento-item p-6 relative overflow-hidden group border-t-2 border-t-primary/20 hover:border-t-primary transition-all"
+                    className="bento-item p-10 min-h-[320px] relative overflow-hidden group border-t-2 border-t-primary/20 hover:border-t-primary transition-all"
                   >
                     <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                       <span className="text-6xl font-black italic">0{w.week}</span>
