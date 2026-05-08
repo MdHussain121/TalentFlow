@@ -13,7 +13,6 @@ import {
   Settings,
   ChevronRight,
   Users,
-  Video,
   Briefcase,
   FileText,
   Map,
@@ -53,7 +52,6 @@ const App: React.FC = () => {
   }, []);
 
   const [suggestedJobs, setSuggestedJobs] = useState<any[]>([]);
-  const [selectedJob, setSelectedJob] = useState<any>(null);
   const [roadmap, setRoadmap] = useState<any>(null);
   const [feedback, setFeedback] = useState<{message: string, type: 'success' | 'info'} | null>(null);
   const [skills, setSkills] = useState([
@@ -207,7 +205,7 @@ const App: React.FC = () => {
                     Your Career Orbit is Expanding
                   </h2>
                   <p className="text-slate-400 max-w-md mb-8">
-                    Based on your recent GitHub commits and mock interview sentiment, your readiness score has increased by <span className="text-emerald-500 font-bold">+12%</span> this week.
+                    Based on your recent GitHub commits and growth momentum, your readiness score has increased by <span className="text-emerald-500 font-bold">+12%</span> this week.
                   </p>
                 </div>
               </div>
@@ -231,26 +229,6 @@ const App: React.FC = () => {
                   <SkillHeatmap skills={skills} />
                 </div>
               </div>
-
-              {/* AI Mock Interview Card */}
-              <div className="col-span-1 md:col-span-1 lg:col-span-4 bento-item p-6 min-h-[400px]">
-                <MockInterview />
-              </div>
-
-            </motion.div>
-          )}
-
-          {activeTab === 'interview' && (
-            <motion.div
-              key="interview"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bento-item p-10 min-h-[600px] flex flex-col"
-            >
-              <MockInterview
-                jobTitle={selectedJob?.title}
-                company={selectedJob?.company}
-              />
             </motion.div>
           )}
 
@@ -311,13 +289,10 @@ const App: React.FC = () => {
                       </div>
                       <button
                         onClick={() => {
-                          setSelectedJob(job);
-                          setActiveTab('interview');
                           showFeedback(`Setting up ${job.title} Mock Interview...`);
                         }}
                         className="w-full py-2.5 rounded-lg bg-emerald-500/10 text-emerald-500 text-[10px] font-bold border border-emerald-500/20 hover:bg-emerald-500/20 transition-all flex items-center justify-center gap-2"
                       >
-                        <Sparkles size={12} /> START MOCK INTERVIEW
                       </button>
                     </div>
                   </div>
