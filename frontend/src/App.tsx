@@ -208,13 +208,7 @@ const App: React.FC = () => {
         </nav>
 
         <div className="mt-auto pt-6 border-t border-white/5">
-          <div className="p-4 glass rounded-2xl flex items-center gap-3 border border-white/10">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-purple-500 shrink-0" />
-            <div className="overflow-hidden">
-              <p className="text-xs font-bold truncate">Siddharth Soni</p>
-              <p className="text-[10px] text-slate-500 truncate">25ADV3ARI0222</p>
-            </div>
-          </div>
+          {/* Profile section removed */}
         </div>
       </aside>
 
