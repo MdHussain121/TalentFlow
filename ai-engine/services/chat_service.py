@@ -23,16 +23,13 @@ Keep responses professional, encouraging, and technically accurate.
             
             messages.append({"role": "user", "content": message})
 
-            # Use the underlying client directly for complex chat or just call a method
-            # For simplicity, we can use the llm_service's client
-            response = await llm_service.client.chat.completions.create(
-                model=llm_service.model,
-                messages=messages,
-                temperature=0.7,
-                max_tokens=1024
+            # Use the unified LLM service to generate the response
+            content = await llm_service.generate_content(
+                prompt="", # Not used when messages list is provided
+                messages=messages
             )
-
-            return response.choices[0].message.content
+            
+            return content
         except Exception as e:
             return f"I'm having trouble syncing with the neural engine. Please try again in a moment. Error: {str(e)}"
 

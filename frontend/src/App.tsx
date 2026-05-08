@@ -29,6 +29,7 @@ import ResumeUpload from './components/ResumeUpload';
 import AIChatbot from './components/AIChatbot';
 import LandingPage from './components/LandingPage';
 import MockInterview from './components/MockInterview';
+import OnboardingGate from './components/OnboardingGate';
 
 const App: React.FC = () => {
   const [isStarted, setIsStarted] = useState(() => {
